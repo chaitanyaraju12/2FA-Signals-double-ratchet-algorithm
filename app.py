@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, session, url_for
 from flask_sqlalchemy import SQLAlchemy
 import hashlib
 import os
+import qrcode
 import base64
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.primitives import hashes
@@ -113,7 +114,14 @@ def index():
             # Display QR code for 2FA setup
             totp = pyotp.TOTP(totp_secret)
             qr_uri = totp.provisioning_uri(username, issuer_name="DummyWebsite")
-            return f'Registration successful! Scan this QR code with your authenticator app: {qr_uri}'
+            # return f'Registration successful! Scan this QR code with your authenticator app: {qr_uri}'
+            def variable():
+                for i in range(0,len(qr_uri)):
+                    if qr_uri[i]=="=":
+                        return i
+            x=variable()
+            text=qr_uri[x+1:x+33]
+            return render_template('register.html', variable=text)
 
     return render_template('index.html')
 
